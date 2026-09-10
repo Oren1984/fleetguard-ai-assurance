@@ -1,0 +1,69 @@
+{
+  "title": "FleetGuard AI - Cold Chain Risk Overview",
+  "uid": "fleetguard-overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-6h", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Active High Risk Trucks",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "targets": [{ "expr": "fleetguard_active_high_risk_trucks", "refId": "A" }],
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } }, "overrides": [] }
+    },
+    {
+      "id": 2,
+      "title": "Pending Approvals",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "targets": [{ "expr": "fleetguard_pending_approvals", "refId": "A" }]
+    },
+    {
+      "id": 3,
+      "title": "Kill Switch Engaged",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "targets": [{ "expr": "fleetguard_kill_switch_engaged", "refId": "A" }],
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } }, "overrides": [] }
+    },
+    {
+      "id": 4,
+      "title": "Ungrounded Responses Blocked (total)",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "targets": [{ "expr": "fleetguard_ungrounded_responses_blocked_total", "refId": "A" }]
+    },
+    {
+      "id": 5,
+      "title": "Risk Assessments by Level (rate)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "targets": [{ "expr": "sum by (risk_level) (rate(fleetguard_risk_assessments_total[5m]))", "legendFormat": "{{risk_level}}", "refId": "A" }]
+    },
+    {
+      "id": 6,
+      "title": "Action Executions by Outcome",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "targets": [{ "expr": "sum by (outcome) (rate(fleetguard_action_executions_total[5m]))", "legendFormat": "{{outcome}}", "refId": "A" }]
+    },
+    {
+      "id": 7,
+      "title": "Risk Scoring Duration (p95)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(fleetguard_risk_scoring_duration_seconds_bucket[5m])) by (le))", "refId": "A" }]
+    },
+    {
+      "id": 8,
+      "title": "Blocked Action Executions (total)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "targets": [{ "expr": "fleetguard_action_execution_blocked_total", "refId": "A" }]
+    }
+  ]
+}
